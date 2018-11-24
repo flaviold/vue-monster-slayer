@@ -3,19 +3,19 @@ new Vue({
   data: {
     gameStarted: false,
     maxHealth: 100,
-    playerLife: 100,
-    monsterLife: 100,
+    playerHealth: 100,
+    monsterHealth: 100,
     battleLog: []
   },
   computed: {
     playerBarStyle() {
-      let percent = ((this.playerLife / this.maxHealth) * 100)
+      let percent = ((this.playerHealth / this.maxHealth) * 100)
       return {
         width: (percent > 0 ? percent : 0) + '%'
       }
     },
     monsterBarStyle() {
-      let percent = ((this.monsterLife / this.maxHealth) * 100)
+      let percent = ((this.monsterHealth / this.maxHealth) * 100)
       return {
         width: (percent > 0 ? percent : 0) + '%'
       }
@@ -23,19 +23,19 @@ new Vue({
   },
   methods: {
     newGameStart() {
-      this.playerLife = this.maxHealth
-      this.monsterLife = this.maxHealth
+      this.playerHealth = this.maxHealth
+      this.monsterHealth = this.maxHealth
 
       this.battleLog = []
 
       this.gameStarted = true
     },
     checkGameOver() {
-      if (this.playerLife <= 0) {
+      if (this.playerHealth <= 0) {
         this.gameOver("Monster")
         return true
       }
-      if (this.monsterLife <= 0) {
+      if (this.monsterHealth <= 0) {
         this.gameOver("Player")
         return true
       }
@@ -49,12 +49,11 @@ new Vue({
       this.gameStarted = false
     },
     attack() {
-      let damage = Math.floor(Math.random() * 7) + 2
+      let damage = Math.floor(Math.random() * 10)
 
-      this.monsterLife -= damage
-      this.battleLog.push({
-        bgColor: 'lightblue',
-        textColor: 'darkblue',
+      this.monsterHealth = Math.max(this.monsterHealth - damage, 0)
+      this.battleLog.unshift({
+        player: true,
         message: 'Player hits monster for ' + damage
       })
       if (!this.checkGameOver()) {
@@ -62,12 +61,11 @@ new Vue({
       }
     },
     specialAttack() {
-      let damage = Math.floor(Math.random() * 14) + 4
+      let damage = Math.floor(Math.random() * 18)
 
-      this.monsterLife -= damage
-      this.battleLog.push({
-        bgColor: 'lightblue',
-        textColor: 'darkblue',
+      this.monsterHealth = Math.max(this.monsterHealth - damage, 0)
+      this.battleLog.unshift({
+        player: true,
         message: 'Player special attack the monster for ' + damage
       })
       if (!this.checkGameOver()) {
@@ -75,15 +73,12 @@ new Vue({
       }
     },
     heal() {
-      let healing = Math.floor(Math.random() * 14) + 4
+      let healing = Math.floor(Math.random() * 18)
 
-      this.playerLife += healing
+      this.playerHealth = Math.min(this.playerHealth + healing, this.maxHealth)
 
-      this.playerLife = this.playerLife < this.maxHealth ? this.playerLife : this.maxHealth
-
-      this.battleLog.push({
-        bgColor: 'lightgreen',
-        textColor: 'darkgreen',
+      this.battleLog.unshift({
+        player: true,
         message: 'Player heals for ' + healing
       })
       if (!this.checkGameOver()) {
@@ -91,12 +86,11 @@ new Vue({
       }
     },
     monsterAttack() {
-      let damage = Math.floor(Math.random() * 7) + 2
+      let damage = Math.floor(Math.random() * 10)
 
-      this.playerLife -= damage
-      this.battleLog.push({
-        bgColor: 'lightcoral',
-        textColor: 'darkred',
+      this.playerHealth = Math.max(this.playerHealth - damage, 0)
+      this.battleLog.unshift({
+        player: false,
         message: 'Monster hits player for ' + damage
       })
       this.checkGameOver()

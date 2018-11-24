@@ -13,7 +13,7 @@
             <h1 class="text-center">YOU</h1>
             <div class="healthbar">
                 <div :style="playerBarStyle" class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-                    {{ playerLife }}
+                    {{ playerHealth }}
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <h1 class="text-center">MONSTER</h1>
             <div class="healthbar">
                 <div :style="monsterBarStyle" class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-                    {{ monsterLife }}
+                    {{ monsterHealth }}
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
     <section v-if="battleLog.length" class="row log">
         <div class="small-12 columns">
             <ul>
-                <li :style="{backgroundColor: log.bgColor, color: log.textColor}" v-for="log in battleLog">
+                <li :class="{ 'player-turn': log.player, 'monster-turn': !log.player}" v-for="log in battleLog">
                     {{ log.message }}
                 </li>
             </ul>
